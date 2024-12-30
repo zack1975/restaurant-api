@@ -21,9 +21,42 @@ let RestaurantsService = class RestaurantsService {
     constructor(restaurantModel) {
         this.restaurantModel = restaurantModel;
     }
-    async findAll() {
-        const restaurants = await this.restaurantModel.find();
+    async findAll(query) {
+        const keyword = query.keyword ? {
+            name: {
+                $regex: query.keyword,
+                $options: 'i'
+            }
+        }
+            : {};
+        const itemsPerPage = 3;
+        const currentPage = Number(query.page) || 1;
+        const skip = (currentPage - 1) * itemsPerPage;
+        const restaurants = await this.restaurantModel
+            .find({ ...keyword })
+            .limit(itemsPerPage)
+            .skip(skip);
         return restaurants;
+    }
+    async create(restaurant) {
+        const newRestaurant = await this.restaurantModel.create(restaurant);
+        return newRestaurant;
+    }
+    async findById(id) {
+        const restaurant = await this.restaurantModel.findById(id);
+        if (!restaurant) {
+            throw new common_1.NotFoundException('Restaurant not found');
+        }
+        return restaurant;
+    }
+    async updateById(id, restaurant) {
+        return await this.restaurantModel.findByIdAndUpdate(id, restaurant, {
+            new: true,
+            runValidators: true
+        });
+    }
+    async deleteById(id) {
+        return await this.restaurantModel.findByIdAndDelete(id);
     }
 };
 exports.RestaurantsService = RestaurantsService;

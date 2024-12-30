@@ -23,9 +23,14 @@
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
 import * as mongoose from 'mongoose';
+import { Query } from 'express-serve-static-core';
 import { Restaurant } from './schemas/restaurant.schema';
 export declare class RestaurantsService {
     private restaurantModel;
     constructor(restaurantModel: mongoose.Model<Restaurant>);
-    findAll(): Promise<Restaurant[]>;
+    findAll(query: Query): Promise<Restaurant[]>;
+    create(restaurant: Restaurant): Promise<Restaurant>;
+    findById(id: string): Promise<Restaurant>;
+    updateById(id: string, restaurant: Restaurant): Promise<Restaurant>;
+    deleteById(id: string): Promise<Restaurant>;
 }
