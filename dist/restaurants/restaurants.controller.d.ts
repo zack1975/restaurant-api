@@ -1,3 +1,4 @@
+/// <reference types="multer" />
 import { Query as ExpressQuery } from 'express-serve-static-core';
 import { RestaurantsService } from './restaurants.service';
 import { Restaurant } from './schemas/restaurant.schema';
@@ -13,4 +14,5 @@ export declare class RestaurantsController {
     deleteRestaurant(id: string): Promise<{
         deleted: boolean;
     }>;
+    uploadFiles(id: string, files: Array<Express.Multer.File>): Promise<any>;
 }

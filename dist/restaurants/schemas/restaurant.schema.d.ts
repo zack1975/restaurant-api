@@ -23,6 +23,15 @@
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose" />
 /// <reference types="mongoose/types/inferschematype" />
+export declare class Location {
+    type: string;
+    coordinates: number[];
+    formattedAddress: string;
+    city: string;
+    state: string;
+    zipcode: string;
+    country: string;
+}
 export declare enum Category {
     FAST_FOOD = "Fast food",
     CAFE = "Cafe",
@@ -36,6 +45,7 @@ export declare class Restaurant {
     address: string;
     category: Category;
     images?: object[];
+    location?: Location;
 }
 export declare const RestaurantSchema: import("mongoose").Schema<Restaurant, import("mongoose").Model<Restaurant, any, any, any, import("mongoose").Document<unknown, any, Restaurant> & Restaurant & {
     _id: import("mongoose").Types.ObjectId;

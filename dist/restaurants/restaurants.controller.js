@@ -14,6 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RestaurantsController = void 0;
 const common_1 = require("@nestjs/common");
+const platform_express_1 = require("@nestjs/platform-express");
 const restaurants_service_1 = require("./restaurants.service");
 const create_restaurant_dto_1 = require("./dto/create-restaurant.dto");
 const update_restaurant_dto_1 = require("./dto/update-restaurant.dto");
@@ -35,9 +36,20 @@ let RestaurantsController = class RestaurantsController {
         return this.restaurantsService.updateById(id, restaurant);
     }
     async deleteRestaurant(id) {
+        const restaurant = await this.restaurantsService.findById(id);
+        const deleteImages = await this.restaurantsService.deleteImages(restaurant.images);
+        if (deleteImages) {
+            await this.restaurantsService.deleteById(id);
+            return { deleted: true };
+        }
+        else {
+            return { deleted: false };
+        }
+    }
+    async uploadFiles(id, files) {
         await this.restaurantsService.findById(id);
-        const restaurant = await this.restaurantsService.deleteById(id);
-        return restaurant ? { deleted: true } : { deleted: false };
+        const res = await this.restaurantsService.uploadImages(id, files);
+        return res;
     }
 };
 exports.RestaurantsController = RestaurantsController;
@@ -77,6 +89,15 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], RestaurantsController.prototype, "deleteRestaurant", null);
+__decorate([
+    (0, common_1.Put)('upload/:id'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FilesInterceptor)('files')),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.UploadedFiles)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Array]),
+    __metadata("design:returntype", Promise)
+], RestaurantsController.prototype, "uploadFiles", null);
 exports.RestaurantsController = RestaurantsController = __decorate([
     (0, common_1.Controller)('restaurants'),
     __metadata("design:paramtypes", [restaurants_service_1.RestaurantsService])

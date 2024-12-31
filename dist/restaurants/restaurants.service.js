@@ -17,17 +17,19 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose = require("mongoose");
 const restaurant_schema_1 = require("./schemas/restaurant.schema");
+const apiFeatures_utils_1 = require("../utils/apiFeatures.utils");
 let RestaurantsService = class RestaurantsService {
     constructor(restaurantModel) {
         this.restaurantModel = restaurantModel;
     }
     async findAll(query) {
-        const keyword = query.keyword ? {
-            name: {
-                $regex: query.keyword,
-                $options: 'i'
+        const keyword = query.keyword
+            ? {
+                name: {
+                    $regex: query.keyword,
+                    $options: 'i'
+                }
             }
-        }
             : {};
         const itemsPerPage = 3;
         const currentPage = Number(query.page) || 1;
@@ -39,10 +41,15 @@ let RestaurantsService = class RestaurantsService {
         return restaurants;
     }
     async create(restaurant) {
-        const newRestaurant = await this.restaurantModel.create(restaurant);
+        const location = await apiFeatures_utils_1.default.getAddressLocation(restaurant.address);
+        const data = Object.assign(restaurant, { location });
+        const newRestaurant = await this.restaurantModel.create(data);
         return newRestaurant;
     }
     async findById(id) {
+        if (!mongoose.isValidObjectId(id)) {
+            throw new common_1.NotFoundException('Invalid ID format, please enter a valid ID');
+        }
         const restaurant = await this.restaurantModel.findById(id);
         if (!restaurant) {
             throw new common_1.NotFoundException('Restaurant not found');
@@ -50,13 +57,36 @@ let RestaurantsService = class RestaurantsService {
         return restaurant;
     }
     async updateById(id, restaurant) {
+        if (!mongoose.isValidObjectId(id)) {
+            throw new common_1.NotFoundException('Invalid ID format, please enter a valid ID');
+        }
         return await this.restaurantModel.findByIdAndUpdate(id, restaurant, {
             new: true,
             runValidators: true
         });
     }
     async deleteById(id) {
+        if (!mongoose.isValidObjectId(id)) {
+            throw new common_1.NotFoundException('Invalid ID format, please enter a valid ID');
+        }
         return await this.restaurantModel.findByIdAndDelete(id);
+    }
+    async uploadImages(id, files) {
+        const images = await apiFeatures_utils_1.default.uploadFiles(files);
+        const restaurant = await this.restaurantModel.findByIdAndUpdate(id, {
+            images: images,
+        }, {
+            new: true,
+            runValidators: true,
+        });
+        return restaurant;
+    }
+    async deleteImages(images) {
+        if (images.length === 0) {
+            return true;
+        }
+        const res = await apiFeatures_utils_1.default.deleteFiles(images);
+        return res;
     }
 };
 exports.RestaurantsService = RestaurantsService;

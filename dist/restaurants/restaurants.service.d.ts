@@ -33,4 +33,6 @@ export declare class RestaurantsService {
     findById(id: string): Promise<Restaurant>;
     updateById(id: string, restaurant: Restaurant): Promise<Restaurant>;
     deleteById(id: string): Promise<Restaurant>;
+    uploadImages(id: any, files: any): Promise<any>;
+    deleteImages(images: any): Promise<any>;
 }
