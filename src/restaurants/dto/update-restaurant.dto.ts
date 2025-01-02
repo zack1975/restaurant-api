@@ -4,8 +4,10 @@ import {
   IsOptional,
   IsPhoneNumber,
   IsString,
+  IsEmpty,
 } from 'class-validator';
 import { Category } from '../schemas/restaurant.schema';
+import { User } from '../../auth/schema/user.schema';
 export class UpdateRestaurantDto {
   @IsString()
   @IsOptional()
@@ -30,4 +32,7 @@ export class UpdateRestaurantDto {
   @IsEnum(Category, { message: 'Please enter a valid category' })
   @IsOptional()
   readonly category: Category;
+
+  @IsEmpty({ message: 'You cannot provide User ID' })
+  readonly user: User;
 }

@@ -12,18 +12,20 @@ const restaurants_controller_1 = require("./restaurants.controller");
 const restaurants_service_1 = require("./restaurants.service");
 const restaurant_schema_1 = require("./schemas/restaurant.schema");
 const mongoose_1 = require("@nestjs/mongoose");
+const auth_module_1 = require("../auth/auth.module");
 let RestaurantsModule = class RestaurantsModule {
 };
 exports.RestaurantsModule = RestaurantsModule;
 exports.RestaurantsModule = RestaurantsModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            auth_module_1.AuthModule,
             mongoose_1.MongooseModule.forFeature([
                 { name: 'Restaurant', schema: restaurant_schema_1.RestaurantSchema },
-            ])
+            ]),
         ],
         controllers: [restaurants_controller_1.RestaurantsController],
-        providers: [restaurants_service_1.RestaurantsService]
+        providers: [restaurants_service_1.RestaurantsService],
     })
 ], RestaurantsModule);
 //# sourceMappingURL=restaurants.module.js.map

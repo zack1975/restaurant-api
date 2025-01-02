@@ -8,10 +8,10 @@ export declare class RestaurantsController {
     private restaurantsService;
     constructor(restaurantsService: RestaurantsService);
     getAllRestaurants(query: ExpressQuery): Promise<Restaurant[]>;
-    createRestaurant(restaurant: CreateRestaurantDto): Promise<Restaurant>;
+    createRestaurant(restaurant: CreateRestaurantDto, user: any): Promise<Restaurant>;
     getRestaurantById(id: string): Promise<Restaurant>;
-    updateRestaurant(id: string, restaurant: UpdateRestaurantDto): Promise<Restaurant>;
-    deleteRestaurant(id: string): Promise<{
+    updateRestaurant(id: string, restaurant: UpdateRestaurantDto, user: any): Promise<Restaurant>;
+    deleteRestaurant(id: string, user: any): Promise<{
         deleted: boolean;
     }>;
     uploadFiles(id: string, files: Array<Express.Multer.File>): Promise<any>;

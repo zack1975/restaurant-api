@@ -1,4 +1,5 @@
 import { Category } from '../schemas/restaurant.schema';
+import { User } from '../../auth/schema/user.schema';
 export declare class CreateRestaurantDto {
     readonly name: string;
     readonly description: string;
@@ -6,4 +7,5 @@ export declare class CreateRestaurantDto {
     readonly phoneNo: number;
     readonly address: string;
     readonly category: Category;
+    readonly user: User;
 }

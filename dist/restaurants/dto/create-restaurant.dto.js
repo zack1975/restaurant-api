@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateRestaurantDto = void 0;
 const class_validator_1 = require("class-validator");
 const restaurant_schema_1 = require("../schemas/restaurant.schema");
+const user_schema_1 = require("../../auth/schema/user.schema");
 class CreateRestaurantDto {
 }
 exports.CreateRestaurantDto = CreateRestaurantDto;
@@ -45,4 +46,8 @@ __decorate([
     (0, class_validator_1.IsEnum)(restaurant_schema_1.Category, { message: 'Please enter a valid category' }),
     __metadata("design:type", String)
 ], CreateRestaurantDto.prototype, "category", void 0);
+__decorate([
+    (0, class_validator_1.IsEmpty)({ message: 'You cannot provide User ID' }),
+    __metadata("design:type", user_schema_1.User)
+], CreateRestaurantDto.prototype, "user", void 0);
 //# sourceMappingURL=create-restaurant.dto.js.map

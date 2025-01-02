@@ -18,6 +18,10 @@ const platform_express_1 = require("@nestjs/platform-express");
 const restaurants_service_1 = require("./restaurants.service");
 const create_restaurant_dto_1 = require("./dto/create-restaurant.dto");
 const update_restaurant_dto_1 = require("./dto/update-restaurant.dto");
+const passport_1 = require("@nestjs/passport");
+const current_user_decorator_1 = require("../auth/decorators/current-user.decorator");
+const roles_guard_1 = require("../auth/guards/roles.guard");
+const roles_decorator_1 = require("../auth/decorators/roles.decorator");
 let RestaurantsController = class RestaurantsController {
     constructor(restaurantsService) {
         this.restaurantsService = restaurantsService;
@@ -25,18 +29,24 @@ let RestaurantsController = class RestaurantsController {
     async getAllRestaurants(query) {
         return this.restaurantsService.findAll(query);
     }
-    async createRestaurant(restaurant) {
-        return this.restaurantsService.create(restaurant);
+    async createRestaurant(restaurant, user) {
+        return this.restaurantsService.create(restaurant, user);
     }
     async getRestaurantById(id) {
         return this.restaurantsService.findById(id);
     }
-    async updateRestaurant(id, restaurant) {
-        await this.restaurantsService.findById(id);
+    async updateRestaurant(id, restaurant, user) {
+        const res = await this.restaurantsService.findById(id);
+        if (res.user.toString() !== user._id.toString()) {
+            throw new common_1.ForbiddenException('You are not allowed to update this restaurant');
+        }
         return this.restaurantsService.updateById(id, restaurant);
     }
-    async deleteRestaurant(id) {
+    async deleteRestaurant(id, user) {
         const restaurant = await this.restaurantsService.findById(id);
+        if (restaurant.user.toString() !== user._id.toString()) {
+            throw new common_1.ForbiddenException('You are not allowed to delete this restaurant');
+        }
         const deleteImages = await this.restaurantsService.deleteImages(restaurant.images);
         if (deleteImages) {
             await this.restaurantsService.deleteById(id);
@@ -62,9 +72,12 @@ __decorate([
 ], RestaurantsController.prototype, "getAllRestaurants", null);
 __decorate([
     (0, common_1.Post)(),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)(), roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)('admin', 'user'),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_restaurant_dto_1.CreateRestaurantDto]),
+    __metadata("design:paramtypes", [create_restaurant_dto_1.CreateRestaurantDto, Object]),
     __metadata("design:returntype", Promise)
 ], RestaurantsController.prototype, "createRestaurant", null);
 __decorate([
@@ -76,21 +89,26 @@ __decorate([
 ], RestaurantsController.prototype, "getRestaurantById", null);
 __decorate([
     (0, common_1.Put)(':id'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
+    __param(2, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, update_restaurant_dto_1.UpdateRestaurantDto]),
+    __metadata("design:paramtypes", [String, update_restaurant_dto_1.UpdateRestaurantDto, Object]),
     __metadata("design:returntype", Promise)
 ], RestaurantsController.prototype, "updateRestaurant", null);
 __decorate([
     (0, common_1.Delete)(':id'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
     __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], RestaurantsController.prototype, "deleteRestaurant", null);
 __decorate([
     (0, common_1.Put)('upload/:id'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
     (0, common_1.UseInterceptors)((0, platform_express_1.FilesInterceptor)('files')),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.UploadedFiles)()),

@@ -25,11 +25,12 @@
 import * as mongoose from 'mongoose';
 import { Query } from 'express-serve-static-core';
 import { Restaurant } from './schemas/restaurant.schema';
+import { User } from '../auth/schema/user.schema';
 export declare class RestaurantsService {
     private restaurantModel;
     constructor(restaurantModel: mongoose.Model<Restaurant>);
     findAll(query: Query): Promise<Restaurant[]>;
-    create(restaurant: Restaurant): Promise<Restaurant>;
+    create(restaurant: Restaurant, user: User): Promise<Restaurant>;
     findById(id: string): Promise<Restaurant>;
     updateById(id: string, restaurant: Restaurant): Promise<Restaurant>;
     deleteById(id: string): Promise<Restaurant>;

@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateRestaurantDto = void 0;
 const class_validator_1 = require("class-validator");
 const restaurant_schema_1 = require("../schemas/restaurant.schema");
+const user_schema_1 = require("../../auth/schema/user.schema");
 class UpdateRestaurantDto {
 }
 exports.UpdateRestaurantDto = UpdateRestaurantDto;
@@ -45,4 +46,8 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateRestaurantDto.prototype, "category", void 0);
+__decorate([
+    (0, class_validator_1.IsEmpty)({ message: 'You cannot provide User ID' }),
+    __metadata("design:type", user_schema_1.User)
+], UpdateRestaurantDto.prototype, "user", void 0);
 //# sourceMappingURL=update-restaurant.dto.js.map

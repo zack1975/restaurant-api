@@ -27,8 +27,8 @@ let RestaurantsService = class RestaurantsService {
             ? {
                 name: {
                     $regex: query.keyword,
-                    $options: 'i'
-                }
+                    $options: 'i',
+                },
             }
             : {};
         const itemsPerPage = 3;
@@ -40,9 +40,9 @@ let RestaurantsService = class RestaurantsService {
             .skip(skip);
         return restaurants;
     }
-    async create(restaurant) {
+    async create(restaurant, user) {
         const location = await apiFeatures_utils_1.default.getAddressLocation(restaurant.address);
-        const data = Object.assign(restaurant, { location });
+        const data = Object.assign(restaurant, { user: user._id, location });
         const newRestaurant = await this.restaurantModel.create(data);
         return newRestaurant;
     }
@@ -62,7 +62,7 @@ let RestaurantsService = class RestaurantsService {
         }
         return await this.restaurantModel.findByIdAndUpdate(id, restaurant, {
             new: true,
-            runValidators: true
+            runValidators: true,
         });
     }
     async deleteById(id) {

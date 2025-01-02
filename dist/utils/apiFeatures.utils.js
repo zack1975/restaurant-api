@@ -34,7 +34,7 @@ class APIFeatures {
                 accessKeyId: process.env.AWS_ACCESS_KEY_ID,
                 secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
             });
-            let images = [];
+            const images = [];
             files.forEach(async (file) => {
                 const splitFile = file.originalname.split('.');
                 const now = new Date();
@@ -45,6 +45,9 @@ class APIFeatures {
                     Body: file.buffer,
                 };
                 const uploadResponse = await s3.upload(params).promise();
+                if (!uploadResponse) {
+                    reject(false);
+                }
                 images.push(uploadResponse);
                 if (images.length === files.length) {
                     resolve(images);
@@ -78,6 +81,11 @@ class APIFeatures {
                 }
             });
         });
+    }
+    static async getUserToken(userId, jwtService) {
+        const payload = { id: userId };
+        const token = await jwtService.sign(payload);
+        return { token: token };
     }
 }
 exports.default = APIFeatures;

@@ -21,8 +21,9 @@
 /// <reference types="mongoose/types/utility" />
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
-/// <reference types="mongoose" />
 /// <reference types="mongoose/types/inferschematype" />
+import { User } from '../../auth/schema/user.schema';
+import mongoose from 'mongoose';
 export declare class Location {
     type: string;
     coordinates: number[];
@@ -46,9 +47,10 @@ export declare class Restaurant {
     category: Category;
     images?: object[];
     location?: Location;
+    user: User;
 }
-export declare const RestaurantSchema: import("mongoose").Schema<Restaurant, import("mongoose").Model<Restaurant, any, any, any, import("mongoose").Document<unknown, any, Restaurant> & Restaurant & {
-    _id: import("mongoose").Types.ObjectId;
-}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Restaurant, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<Restaurant>> & import("mongoose").FlatRecord<Restaurant> & {
-    _id: import("mongoose").Types.ObjectId;
+export declare const RestaurantSchema: mongoose.Schema<Restaurant, mongoose.Model<Restaurant, any, any, any, mongoose.Document<unknown, any, Restaurant> & Restaurant & {
+    _id: mongoose.Types.ObjectId;
+}, any>, {}, {}, {}, {}, mongoose.DefaultSchemaOptions, Restaurant, mongoose.Document<unknown, {}, mongoose.FlatRecord<Restaurant>> & mongoose.FlatRecord<Restaurant> & {
+    _id: mongoose.Types.ObjectId;
 }>;

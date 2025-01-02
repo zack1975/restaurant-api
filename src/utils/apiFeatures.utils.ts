@@ -1,4 +1,5 @@
 const NodeGeocoder = require('node-geocoder');
+import { JwtService } from '@nestjs/jwt';
 import { Location } from '../restaurants/schemas/restaurant.schema';
 import { S3 } from 'aws-sdk';
 
@@ -30,14 +31,14 @@ export default class APIFeatures {
     }
   }
 
-  static async uploadFiles(files){
+  static async uploadFiles(files) {
     return new Promise((resolve, reject) => {
       const s3 = new S3({
         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
       });
 
-      let images = [];
+      const images = [];
 
       files.forEach(async (file) => {
         const splitFile = file.originalname.split('.');
@@ -51,6 +52,9 @@ export default class APIFeatures {
         };
 
         const uploadResponse = await s3.upload(params).promise();
+        if (!uploadResponse) {
+          reject(false);
+        }
         images.push(uploadResponse);
 
         if (images.length === files.length) {
@@ -60,8 +64,7 @@ export default class APIFeatures {
     });
   }
 
-  static async deleteFiles(files){
-
+  static async deleteFiles(files) {
     const s3 = new S3({
       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -89,5 +92,14 @@ export default class APIFeatures {
         }
       });
     });
+  }
+
+  static async getUserToken(
+    userId: string,
+    jwtService: JwtService,
+  ): Promise<{ token: string }> {
+    const payload = { id: userId };
+    const token = await jwtService.sign(payload);
+    return { token: token };
   }
 }
