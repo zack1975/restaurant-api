@@ -71,3 +71,18 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+## Others information
+```bash
+Create the .env.[ENVIRONMENT] file and put the following inside:
+DB_URI_LOCAL = your mongo uri
+GEOCODER_PROVIDER = your geo-provider eg. google
+GEOCODER_API_KEY = your geocode api key
+
+AWS_BUCKET_NAME = aws bucket name
+AWS_ACCESS_KEY_ID = your aws bucket access key id
+AWS_SECRET_ACCESS_KEY = your aws bucket secret access key
+
+JWT_SECRET = your secret string here
+JWT_EXPIRES_IN = 1d
+```
